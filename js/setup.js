@@ -13,9 +13,9 @@ var getRandomElement = function (array) {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-var getWizards = function (names, surnames, coats, eyes) {
+var getWizards = function (amount, names, surnames, coats, eyes) {
   var wizards = [];
-  for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
+  for (var i = 0; i < amount; i++) {
     var wizard = {};
     wizard.name = getRandomElement(names) + ' ' + getRandomElement(surnames);
     wizard.coatColor = getRandomElement(coats);
@@ -25,12 +25,8 @@ var getWizards = function (names, surnames, coats, eyes) {
   return wizards;
 };
 
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-var similarListElement = document.querySelector('.setup-similar-list');
-var fragment = document.createDocumentFragment();
-
-var cloneWizard = function (wizard) {
-  var wizardClone = similarWizardTemplate.cloneNode(true);
+var cloneWizard = function (wizard, template) {
+  var wizardClone = template.cloneNode(true);
 
   wizardClone.querySelector('.wizard-coat').style.fill = wizard.coatColor;
   wizardClone.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
@@ -39,10 +35,12 @@ var cloneWizard = function (wizard) {
   return wizardClone;
 };
 
-var similarWizards = getWizards(WIZARD_NAMES, WIZARD_SURNAMES, WIZARD_COATS, WIZARD_EYES);
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+var fragment = document.createDocumentFragment();
+var similarWizards = getWizards(NUMBER_OF_WIZARDS, WIZARD_NAMES, WIZARD_SURNAMES, WIZARD_COATS, WIZARD_EYES);
 for (var i = 0; i < similarWizards.length; i++) {
-  fragment.appendChild(cloneWizard(similarWizards[i]));
+  fragment.appendChild(cloneWizard(similarWizards[i], similarWizardTemplate));
 }
 
-similarListElement.appendChild(fragment);
+document.querySelector('.setup-similar-list').appendChild(fragment);
 document.querySelector('.setup-similar').classList.remove('hidden');
