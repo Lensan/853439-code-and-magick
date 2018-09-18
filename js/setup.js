@@ -9,11 +9,8 @@ var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
 var ESCAPE_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
-var SERVER_URL = 'https://js.dump.academy/code-and-magick';
 
 var setupElement = document.querySelector('.setup');
-setupElement.querySelector('.setup-wizard-form').action = SERVER_URL;
-setupElement.querySelector('.setup-user-name').minLength = 2;
 
 var openPopup = function () {
   setupElement.classList.remove('hidden');
@@ -26,7 +23,7 @@ var closePopup = function () {
 };
 
 var onPopupEscPress = function (evt) {
-  if (evt.key === ESCAPE_KEY) {
+  if (evt.key === ESCAPE_KEY && !evt.target.classList.contains('setup-user-name')) {
     closePopup();
   }
 };
