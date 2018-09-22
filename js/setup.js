@@ -11,6 +11,15 @@ var ESCAPE_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 
 var setupElement = document.querySelector('.setup');
+var initialSetupCoords = {
+  top: setupElement.style.top,
+  left: setupElement.style.left
+};
+
+var revertPopupPosition = function () {
+  setupElement.style.top = initialSetupCoords.top;
+  setupElement.style.left = initialSetupCoords.left;
+};
 
 var openPopup = function () {
   setupElement.classList.remove('hidden');
@@ -25,6 +34,7 @@ var closePopup = function () {
 var onPopupEscPress = function (evt) {
   if (evt.key === ESCAPE_KEY && !evt.target.classList.contains('setup-user-name')) {
     closePopup();
+    revertPopupPosition();
   }
 };
 
@@ -46,11 +56,13 @@ setupCloseElement.tabIndex = 0;
 
 setupCloseElement.addEventListener('click', function () {
   closePopup();
+  revertPopupPosition();
 });
 
 setupCloseElement.addEventListener('keydown', function (evt) {
   if (evt.key === ENTER_KEY) {
     closePopup();
+    revertPopupPosition();
   }
 });
 
@@ -126,3 +138,43 @@ for (var i = 0; i < similarWizards.length; i++) {
 
 document.querySelector('.setup-similar-list').appendChild(fragment);
 document.querySelector('.setup-similar').classList.remove('hidden');
+
+// create module dialog.js
+var dialogHandler = setupElement.querySelector('.upload');
+dialogHandler.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    setupElement.style.top = (setupElement.offsetTop - shift.y) + 'px';
+    setupElement.style.left = (setupElement.offsetLeft - shift.x) + 'px';
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    var onClickPreventDefault = function (clickEvent) {
+      clickEvent.preventDefault();
+      dialogHandler.removeEventListener('click', onClickPreventDefault);
+    };
+    if (dragged) {
+      dialogHandler.addEventListener('click', onClickPreventDefault);
+    }
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
