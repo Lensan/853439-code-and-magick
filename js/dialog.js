@@ -94,4 +94,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var onSuccessLoad = function () {
+    window.util.setupElement.classList.add('hidden');
+  };
+
+  var setupWizardFormElement = window.util.setupElement.querySelector('.setup-wizard-form');
+  setupWizardFormElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(setupWizardFormElement), onSuccessLoad, window.util.onErrorLoad);
+    evt.preventDefault();
+  });
 })();
