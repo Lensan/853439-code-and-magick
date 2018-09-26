@@ -5,6 +5,13 @@
   var URL_LOAD = URL_SAVE + '/data';
   var CONNECTION_ERROR = 'Произошла ошибка соединения';
 
+  var Code = {
+    SUCCESS: 200,
+    ERROR_BAD_REQUEST: 400,
+    ERROR_NOT_AUTHORIZED: 401,
+    ERROR_NOT_FOUND: 404
+  };
+
   var setTimeoutError = function (timeout) {
     return 'Запрос не успел выполниться за ' + timeout + 'мс';
   };
@@ -12,13 +19,13 @@
   var setErrorMessage = function (errorStatus, errorStatusText) {
     var errorMessage;
     switch (errorStatus) {
-      case 400:
+      case Code.ERROR_BAD_REQUEST:
         errorMessage = 'Неверный запрос';
         break;
-      case 401:
+      case Code.ERROR_NOT_AUTHORIZED:
         errorMessage = 'Пользователь не авторизован';
         break;
-      case 404:
+      case Code.ERROR_NOT_FOUND:
         errorMessage = 'Ничего не найдено';
         break;
       default:
@@ -34,7 +41,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === Code.SUCCESS) {
           onLoad(xhr.response);
         } else {
           onError(setErrorMessage(xhr.status, xhr.statusText));
@@ -59,7 +66,7 @@
       xhr.open('GET', URL_LOAD);
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === Code.SUCCESS) {
           onLoad(xhr.response);
         } else {
           onError(setErrorMessage(xhr.status, xhr.statusText));
