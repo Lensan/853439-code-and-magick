@@ -12,11 +12,11 @@
     ERROR_NOT_FOUND: 404
   };
 
-  var setTimeoutError = function (timeout) {
+  var getTimeoutError = function (timeout) {
     return 'Запрос не успел выполниться за ' + timeout + 'мс';
   };
 
-  var setErrorMessage = function (errorStatus, errorStatusText) {
+  var getErrorMessage = function (errorStatus, errorStatusText) {
     var errorMessage;
     switch (errorStatus) {
       case Code.ERROR_BAD_REQUEST:
@@ -44,7 +44,7 @@
         if (xhr.status === Code.SUCCESS) {
           onLoad(xhr.response);
         } else {
-          onError(setErrorMessage(xhr.status, xhr.statusText));
+          onError(getErrorMessage(xhr.status, xhr.statusText));
         }
       });
 
@@ -53,7 +53,7 @@
       });
 
       xhr.addEventListener('timeout', function () {
-        onError(setTimeoutError(xhr.timeout));
+        onError(getTimeoutError(xhr.timeout));
       });
 
       xhr.open('POST', URL_SAVE);
@@ -69,7 +69,7 @@
         if (xhr.status === Code.SUCCESS) {
           onLoad(xhr.response);
         } else {
-          onError(setErrorMessage(xhr.status, xhr.statusText));
+          onError(getErrorMessage(xhr.status, xhr.statusText));
         }
       });
 
@@ -78,7 +78,7 @@
       });
 
       xhr.addEventListener('timeout', function () {
-        onError(setTimeoutError(xhr.timeout));
+        onError(getTimeoutError(xhr.timeout));
       });
 
       xhr.send();
